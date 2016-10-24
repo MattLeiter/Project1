@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_ch03src" default="compile.module.ch03src">
+  <dirname property="module.ch03src.basedir" file="${ant.file.module_ch03src}"/>
+  
+  <property name="module.jdk.home.ch03src" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.ch03src" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.ch03src" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.ch03src" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="ch03src.output.dir" value="${module.ch03src.basedir}/../../../out/production/ch03src"/>
+  <property name="ch03src.testoutput.dir" value="${module.ch03src.basedir}/../../../out/test/ch03src"/>
+  
+  <path id="ch03src.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="ch03src.module.production.classpath">
+    <path refid="${module.jdk.classpath.ch03src}"/>
+  </path>
+  
+  <path id="ch03src.runtime.production.module.classpath">
+    <pathelement location="${ch03src.output.dir}"/>
+  </path>
+  
+  <path id="ch03src.module.classpath">
+    <path refid="${module.jdk.classpath.ch03src}"/>
+    <pathelement location="${ch03src.output.dir}"/>
+  </path>
+  
+  <path id="ch03src.runtime.module.classpath">
+    <pathelement location="${ch03src.testoutput.dir}"/>
+    <pathelement location="${ch03src.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.ch03src">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.ch03src">
+    <patternset refid="excluded.from.module.ch03src"/>
+  </patternset>
+  
+  <path id="ch03src.module.sourcepath">
+    <dirset dir="${module.ch03src.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.ch03src" depends="compile.module.ch03src.production,compile.module.ch03src.tests" description="Compile module ch03src"/>
+  
+  <target name="compile.module.ch03src.production" depends="register.custom.compilers" description="Compile module ch03src; production classes">
+    <mkdir dir="${ch03src.output.dir}"/>
+    <javac2 destdir="${ch03src.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ch03src}/javac">
+      <compilerarg line="${compiler.args.ch03src}"/>
+      <bootclasspath refid="ch03src.module.bootclasspath"/>
+      <classpath refid="ch03src.module.production.classpath"/>
+      <src refid="ch03src.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.ch03src"/>
+    </javac2>
+    
+    <copy todir="${ch03src.output.dir}">
+      <fileset dir="${module.ch03src.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.ch03src.tests" depends="register.custom.compilers,compile.module.ch03src.production" description="compile module ch03src; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.ch03src" description="cleanup module">
+    <delete dir="${ch03src.output.dir}"/>
+    <delete dir="${ch03src.testoutput.dir}"/>
+  </target>
+</project>
