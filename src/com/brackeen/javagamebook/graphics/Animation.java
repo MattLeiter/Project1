@@ -19,9 +19,24 @@ public class Animation {
         Creates a new, empty Animation.
     */
     public Animation() {
-        frames = new ArrayList();
-        totalDuration = 0;
+        this(new ArrayList(), 0);
+    }
+
+
+    private Animation(ArrayList frames, long totalDuration) {
+        this.frames = frames;
+        this.totalDuration = totalDuration;
         start();
+    }
+
+
+    /**
+        Creates a duplicate of this animation. The list of frames
+        are shared between the two Animations, but each Animation
+        can be animated independently.
+    */
+    public Object clone() {
+        return new Animation(frames, totalDuration);
     }
 
 

@@ -4,7 +4,7 @@ import java.awt.Image;
 
 public class Sprite {
 
-    private Animation anim;
+    protected Animation anim;
     // position (pixels)
     private float x;
     private float y;
@@ -110,5 +110,13 @@ public class Sprite {
     */
     public Image getImage() {
         return anim.getImage();
+    }
+
+    /**
+        Clones this Sprite. Does not clone position or velocity
+        info.
+    */
+    public Object clone() {
+        return new Sprite(anim);
     }
 }

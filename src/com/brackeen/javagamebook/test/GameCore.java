@@ -14,7 +14,15 @@ public abstract class GameCore {
     protected static final int FONT_SIZE = 24;
 
     private static final DisplayMode POSSIBLE_MODES[] = {
-         new DisplayMode(1920, 1080, 16, 0)
+        new DisplayMode(800, 600, 16, 0),
+        new DisplayMode(800, 600, 32, 0),
+        new DisplayMode(800, 600, 24, 0),
+        new DisplayMode(640, 480, 16, 0),
+        new DisplayMode(640, 480, 32, 0),
+        new DisplayMode(640, 480, 24, 0),
+        new DisplayMode(1024, 768, 16, 0),
+        new DisplayMode(1024, 768, 32, 0),
+        new DisplayMode(1024, 768, 24, 0),
     };
 
     private boolean isRunning;
@@ -39,7 +47,32 @@ public abstract class GameCore {
         }
         finally {
             screen.restoreScreen();
+            lazilyExit();
         }
+    }
+
+
+    /**
+        Exits the VM from a daemon thread. The daemon thread waits
+        2 seconds then calls System.exit(0). Since the VM should
+        exit when only daemon threads are running, this makes sure
+        System.exit(0) is only called if neccesary. It's neccesary
+        if the Java Sound system is running.
+    */
+    public void lazilyExit() {
+        Thread thread = new Thread() {
+            public void run() {
+                // first, wait for the VM exit on its own.
+                try {
+                    Thread.sleep(2000);
+                }
+                catch (InterruptedException ex) { }
+                // system is still running, so force an exit
+                System.exit(0);
+            }
+        };
+        thread.setDaemon(true);
+        thread.start();
     }
 
 
@@ -87,11 +120,11 @@ public abstract class GameCore {
             g.dispose();
             screen.update();
 
-            // take a nap
-            try {
+            // don't take a nap! run as fast as possible
+            /*try {
                 Thread.sleep(20);
             }
-            catch (InterruptedException ex) { }
+            catch (InterruptedException ex) { }*/
         }
     }
 

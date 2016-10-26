@@ -2,11 +2,11 @@
 
 <!-- ===================================================================== -->
 <!-- Developing Games in Java                                              -->
-<!-- Chapter 3: Interactivity and User Interfaces                          -->
+<!-- Chapter 18: Last 10% (JNLP)                                           -->
 <!-- Ant 1.5 build file                                                    -->
 <!-- ===================================================================== -->
 
-<project name="chap03 - Interactivity and User Interfaces" default="compile" basedir=".">
+<project name="chap18 - Last 10% (JNLP)" default="build" basedir=".">
 
     <property name="srcdir" value="src"/>
     <property name="destdir" value="build"/>
@@ -42,6 +42,57 @@
 
 
     <!-- =================================================================== -->
+    <!-- Build                                                               -->
+    <!-- =================================================================== -->
+    <target name="build" depends="clean, compile">
+
+        <jar jarfile="${basedir}/tilegame.jar">
+            <manifest>
+                <attribute name="Main-Class"
+                    value="com.brackeen.javagamebook.tilegame.GameManager"/>
+            </manifest>
+
+            <fileset dir="${destdir}" includes="**/*.class" />
+        </jar>
+
+
+        <jar jarfile="${basedir}/tilegameres.jar">
+            <fileset dir="${basedir}" includes="images/**"/>
+            <fileset dir="${basedir}" includes="sounds/**"/>
+            <fileset dir="${basedir}" includes="maps/**"/>
+        </jar>
+
+        <signjar jar="${basedir}/tilegame.jar"
+             storepass="secret"
+             alias="Nobody"
+             keystore="${basedir}/res/samplekeystore"/>
+
+        <signjar jar="${basedir}/tilegameres.jar"
+             storepass="secret"
+             alias="Nobody"
+             keystore="${basedir}/res/samplekeystore"/>
+
+    </target>
+
+
+    <!-- =================================================================== -->
+    <!-- Run Targets                                                         -->
+    <!-- =================================================================== -->
+    <target name="run-without-jnlp" description="">
+        <java
+            classname="com.brackeen.javagamebook.tilegame.GameManager"
+            classpath="tilegame.jar;tilegameres.jar"
+            fork="true"
+            dir="${basedir}"
+            failonerror="true"
+            >
+        <jvmarg value="-Xprof"/>
+    </java>
+  </target>
+
+
+
+    <!-- =================================================================== -->
     <!-- Javadoc                                                             -->
     <!-- =================================================================== -->
     <target name="javadoc" description="Creates API documentation (JavaDocs) for this chapter">
@@ -65,5 +116,6 @@
         </javadoc>
 
     </target>
+
 
 </project>

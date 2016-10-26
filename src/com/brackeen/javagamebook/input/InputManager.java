@@ -163,6 +163,20 @@ public class InputManager implements KeyListener, MouseListener,
 
 
     /**
+        Clears all mapped keys and mouse actions.
+    */
+    public void clearAllMaps() {
+        for (int i=0; i<keyActions.length; i++) {
+            keyActions[i] = null;
+        }
+
+        for (int i=0; i<mouseActions.length; i++) {
+            mouseActions[i] = null;
+        }
+    }
+
+
+    /**
         Gets a List of names of the keys and mouse actions mapped
         to this GameAction. Each entry in the List is a String.
     */
